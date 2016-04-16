@@ -417,7 +417,7 @@ namespace SerialComBytes
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Serial Bytes Communication";
+            this.Text = "test";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.GroupBox1.ResumeLayout(false);
             this.GroupBox1.PerformLayout();

@@ -12,6 +12,7 @@ using System.IO.Ports;
 using System.IO;
 using System.Data.OleDb;
 
+
 namespace SerialComBytes
 {
     public partial class Form1
@@ -43,19 +44,19 @@ namespace SerialComBytes
         {
             lstBauds.SelectedIndex = 5;
             CloseComPort();
-            string filePath = Path.GetDirectoryName(Application.ExecutablePath) + @"\Files\Components.xlsx";
-            try
+            string filePath = Properties.Settings.Default.ComponentFilePath;
+
+            if (filePath != "")
             {
                 loadComponentGrid(filePath);
-            }catch(Exception ex)
+            }
+            else
             {
                 Console.WriteLine("Invalid path");
             }
 
             componentList = getComponentNameList();
             populateOutputColumns(componentList);
-
-
         }
         private void dataRcvEvent(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
@@ -434,9 +435,8 @@ namespace SerialComBytes
 
         private void loadComponentGrid(string path)
         {
-            string filePath = path;
-            string extension = Path.GetExtension(filePath);
-            Console.WriteLine(filePath);
+            string extension = Path.GetExtension(path);
+            Console.WriteLine(path);
             string header = "YES";
             string conStr, sheetName;
 
@@ -445,11 +445,11 @@ namespace SerialComBytes
             {
 
                 case ".xls": //Excel 97-03
-                    conStr = string.Format(Excel03ConString, filePath, header);
+                    conStr = string.Format(Excel03ConString, path, header);
                     break;
 
                 case ".xlsx": //Excel 07
-                    conStr = string.Format(Excel07ConString, filePath, header);
+                    conStr = string.Format(Excel07ConString, path, header);
                     break;
             }
 
@@ -532,6 +532,8 @@ namespace SerialComBytes
         private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             string filePath = openFileDialog1.FileName;
+            Properties.Settings.Default.ComponentFilePath = filePath;
+            Properties.Settings.Default.Save();
             loadComponentGrid(filePath);
         }
 
