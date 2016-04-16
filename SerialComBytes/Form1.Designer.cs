@@ -367,7 +367,6 @@ namespace SerialComBytes
             this.componentDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.componentDataGrid.Location = new System.Drawing.Point(7, 21);
             this.componentDataGrid.Name = "componentDataGrid";
-            this.componentDataGrid.RowHeadersVisible = false;
             this.componentDataGrid.Size = new System.Drawing.Size(837, 230);
             this.componentDataGrid.TabIndex = 1;
             // 
