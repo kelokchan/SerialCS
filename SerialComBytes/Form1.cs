@@ -494,11 +494,11 @@ namespace SerialComBytes
             foreach(DataGridViewRow row in componentDataGrid.Rows)
             {
                 Component component = new Component();
-                component.Address = row.Cells[0].ToString();
-                component.Name = row.Cells[1].Value.ToString();
-                component.Unit = row.Cells[2].Value.ToString();
-                component.Multiplier = Double.Parse(row.Cells[3].Value.ToString());
-                component.RegCount = int.Parse(row.Cells[4].Value.ToString());
+                component.Address = row.Cells["Reg Addr (Hex)"].ToString();
+                component.Name = row.Cells["Register"].Value.ToString();
+                component.Unit = row.Cells["Unit"].Value.ToString();
+                component.Multiplier = Double.Parse(row.Cells["Multiplier"].Value.ToString());
+                component.RegCount = int.Parse(row.Cells["Reg Byte Count"].Value.ToString());
                 componentList.Add(component);
             }
             return componentList;
@@ -527,13 +527,17 @@ namespace SerialComBytes
 
         private void btnSelect_Click(object sender, EventArgs e)
         {
-            openFileDialog1.ShowDialog();
         }
 
         private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             string filePath = openFileDialog1.FileName;
             loadComponentGrid(filePath);
+        }
+
+        private void loadComponentListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
         }
     }
 }

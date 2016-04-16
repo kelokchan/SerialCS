@@ -66,16 +66,19 @@ namespace SerialComBytes
             this.myComPort = new System.IO.Ports.SerialPort(this.components);
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.componentDataGrid = new System.Windows.Forms.DataGridView();
-            this.btnSelect = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.outputDataGrid = new System.Windows.Forms.DataGridView();
+            this.componentDataGrid = new System.Windows.Forms.DataGridView();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadComponentListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GroupBox1.SuspendLayout();
             this.GroupBox2.SuspendLayout();
             this.GroupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.componentDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.componentDataGrid)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Label1
@@ -336,39 +339,12 @@ namespace SerialComBytes
             this.groupBox4.Controls.Add(this.outputDataGrid);
             this.groupBox4.Controls.Add(this.componentDataGrid);
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(199, 9);
+            this.groupBox4.Location = new System.Drawing.Point(199, 47);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(850, 553);
+            this.groupBox4.Size = new System.Drawing.Size(850, 515);
             this.groupBox4.TabIndex = 17;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Data";
-            // 
-            // componentDataGrid
-            // 
-            this.componentDataGrid.AllowUserToAddRows = false;
-            this.componentDataGrid.AllowUserToDeleteRows = false;
-            this.componentDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.componentDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.componentDataGrid.Location = new System.Drawing.Point(6, 21);
-            this.componentDataGrid.Name = "componentDataGrid";
-            this.componentDataGrid.RowHeadersVisible = false;
-            this.componentDataGrid.Size = new System.Drawing.Size(837, 230);
-            this.componentDataGrid.TabIndex = 1;
-            // 
-            // btnSelect
-            // 
-            this.btnSelect.Location = new System.Drawing.Point(12, 388);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(75, 51);
-            this.btnSelect.TabIndex = 18;
-            this.btnSelect.Text = "Load Component File";
-            this.btnSelect.UseVisualStyleBackColor = true;
-            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.Filter = "Excel Files|*.xls;*.xlsx";
-            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // outputDataGrid
             // 
@@ -376,25 +352,68 @@ namespace SerialComBytes
             this.outputDataGrid.AllowUserToDeleteRows = false;
             this.outputDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.outputDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.outputDataGrid.Location = new System.Drawing.Point(6, 258);
+            this.outputDataGrid.Location = new System.Drawing.Point(6, 257);
             this.outputDataGrid.Name = "outputDataGrid";
             this.outputDataGrid.RowHeadersVisible = false;
-            this.outputDataGrid.Size = new System.Drawing.Size(837, 289);
+            this.outputDataGrid.Size = new System.Drawing.Size(837, 290);
             this.outputDataGrid.TabIndex = 2;
+            // 
+            // componentDataGrid
+            // 
+            this.componentDataGrid.AllowUserToAddRows = false;
+            this.componentDataGrid.AllowUserToDeleteRows = false;
+            this.componentDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.componentDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.componentDataGrid.Location = new System.Drawing.Point(7, 21);
+            this.componentDataGrid.Name = "componentDataGrid";
+            this.componentDataGrid.RowHeadersVisible = false;
+            this.componentDataGrid.Size = new System.Drawing.Size(837, 230);
+            this.componentDataGrid.TabIndex = 1;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "Excel Files|*.xls;*.xlsx";
+            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1054, 24);
+            this.menuStrip1.TabIndex = 19;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadComponentListToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // loadComponentListToolStripMenuItem
+            // 
+            this.loadComponentListToolStripMenuItem.Name = "loadComponentListToolStripMenuItem";
+            this.loadComponentListToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.loadComponentListToolStripMenuItem.Text = "Load Component List";
+            this.loadComponentListToolStripMenuItem.Click += new System.EventHandler(this.loadComponentListToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1054, 737);
-            this.Controls.Add(this.btnSelect);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.txMsgBox);
             this.Controls.Add(this.GroupBox3);
             this.Controls.Add(this.GroupBox2);
             this.Controls.Add(this.GroupBox1);
+            this.Controls.Add(this.menuStrip1);
             this.ForeColor = System.Drawing.SystemColors.MenuText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -407,8 +426,10 @@ namespace SerialComBytes
             this.GroupBox3.ResumeLayout(false);
             this.GroupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.componentDataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputDataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.componentDataGrid)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -436,10 +457,12 @@ namespace SerialComBytes
 		private System.Windows.Forms.TextBox txMsgBox;
         private TextBox valueBox;
         private DataGridView componentDataGrid;
-        private Button btnSelect;
         private GroupBox groupBox4;
         private OpenFileDialog openFileDialog1;
         private DataGridView outputDataGrid;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem loadComponentListToolStripMenuItem;
     }
 
 }
