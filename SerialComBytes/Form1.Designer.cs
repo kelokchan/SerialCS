@@ -72,6 +72,7 @@ namespace SerialComBytes
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadComponentListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.inputButton = new System.Windows.Forms.Button();
             this.GroupBox1.SuspendLayout();
             this.GroupBox2.SuspendLayout();
             this.GroupBox3.SuspendLayout();
@@ -200,7 +201,7 @@ namespace SerialComBytes
             this.GroupBox1.Controls.Add(this.lstBauds);
             this.GroupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GroupBox1.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.GroupBox1.Location = new System.Drawing.Point(12, 444);
+            this.GroupBox1.Location = new System.Drawing.Point(12, 47);
             this.GroupBox1.Name = "GroupBox1";
             this.GroupBox1.Size = new System.Drawing.Size(181, 176);
             this.GroupBox1.TabIndex = 9;
@@ -400,11 +401,22 @@ namespace SerialComBytes
             this.loadComponentListToolStripMenuItem.Text = "Load Component List";
             this.loadComponentListToolStripMenuItem.Click += new System.EventHandler(this.loadComponentListToolStripMenuItem_Click);
             // 
+            // inputButton
+            // 
+            this.inputButton.Location = new System.Drawing.Point(29, 248);
+            this.inputButton.Name = "inputButton";
+            this.inputButton.Size = new System.Drawing.Size(75, 50);
+            this.inputButton.TabIndex = 20;
+            this.inputButton.Text = "Start";
+            this.inputButton.UseVisualStyleBackColor = true;
+            this.inputButton.Click += new System.EventHandler(this.inputButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1054, 737);
+            this.Controls.Add(this.inputButton);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.txMsgBox);
             this.Controls.Add(this.GroupBox3);
@@ -463,6 +475,7 @@ namespace SerialComBytes
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem loadComponentListToolStripMenuItem;
+        private Button inputButton;
     }
 
 }

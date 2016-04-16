@@ -541,5 +541,15 @@ namespace SerialComBytes
         {
             openFileDialog1.ShowDialog();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void inputButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
