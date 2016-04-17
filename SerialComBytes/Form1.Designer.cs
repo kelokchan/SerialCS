@@ -61,7 +61,6 @@ namespace SerialComBytes
             this.sndTxMsgBut = new System.Windows.Forms.Button();
             this.allMsgBox = new System.Windows.Forms.TextBox();
             this.GroupBox3 = new System.Windows.Forms.GroupBox();
-            this.valueBox = new System.Windows.Forms.TextBox();
             this.txMsgBox = new System.Windows.Forms.TextBox();
             this.myComPort = new System.IO.Ports.SerialPort(this.components);
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
@@ -72,7 +71,13 @@ namespace SerialComBytes
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadComponentListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveOutputDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inputButton = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GroupBox1.SuspendLayout();
             this.GroupBox2.SuspendLayout();
             this.GroupBox3.SuspendLayout();
@@ -80,6 +85,7 @@ namespace SerialComBytes
             ((System.ComponentModel.ISupportInitialize)(this.outputDataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.componentDataGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // Label1
@@ -251,12 +257,13 @@ namespace SerialComBytes
             this.GroupBox2.Controls.Add(this.lrc_RdBut);
             this.GroupBox2.Controls.Add(this.nocrc_RdBut);
             this.GroupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBox2.Location = new System.Drawing.Point(12, 626);
+            this.GroupBox2.Location = new System.Drawing.Point(12, 554);
             this.GroupBox2.Name = "GroupBox2";
             this.GroupBox2.Size = new System.Drawing.Size(181, 100);
             this.GroupBox2.TabIndex = 13;
             this.GroupBox2.TabStop = false;
             this.GroupBox2.Text = "Msg Authentication Mode";
+            this.GroupBox2.Visible = false;
             // 
             // label4
             // 
@@ -289,38 +296,25 @@ namespace SerialComBytes
             this.allMsgBox.Name = "allMsgBox";
             this.allMsgBox.ReadOnly = true;
             this.allMsgBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.allMsgBox.Size = new System.Drawing.Size(407, 94);
+            this.allMsgBox.Size = new System.Drawing.Size(1131, 94);
             this.allMsgBox.TabIndex = 14;
             // 
             // GroupBox3
             // 
-            this.GroupBox3.Controls.Add(this.valueBox);
             this.GroupBox3.Controls.Add(this.allMsgBox);
             this.GroupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GroupBox3.Location = new System.Drawing.Point(199, 568);
             this.GroupBox3.Name = "GroupBox3";
-            this.GroupBox3.Size = new System.Drawing.Size(843, 132);
+            this.GroupBox3.Size = new System.Drawing.Size(1143, 132);
             this.GroupBox3.TabIndex = 15;
             this.GroupBox3.TabStop = false;
             this.GroupBox3.Text = "Communication Messages";
-            // 
-            // valueBox
-            // 
-            this.valueBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.valueBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.valueBox.Location = new System.Drawing.Point(430, 26);
-            this.valueBox.Multiline = true;
-            this.valueBox.Name = "valueBox";
-            this.valueBox.ReadOnly = true;
-            this.valueBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.valueBox.Size = new System.Drawing.Size(407, 94);
-            this.valueBox.TabIndex = 15;
             // 
             // txMsgBox
             // 
             this.txMsgBox.Location = new System.Drawing.Point(205, 706);
             this.txMsgBox.Name = "txMsgBox";
-            this.txMsgBox.Size = new System.Drawing.Size(831, 20);
+            this.txMsgBox.Size = new System.Drawing.Size(1137, 20);
             this.txMsgBox.TabIndex = 16;
             this.txMsgBox.TextChanged += new System.EventHandler(this.txMsgBox_TxtChgd);
             this.txMsgBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txMsgBox_KeyPress);
@@ -342,7 +336,7 @@ namespace SerialComBytes
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(199, 47);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(850, 515);
+            this.groupBox4.Size = new System.Drawing.Size(1149, 515);
             this.groupBox4.TabIndex = 17;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Data";
@@ -351,12 +345,12 @@ namespace SerialComBytes
             // 
             this.outputDataGrid.AllowUserToAddRows = false;
             this.outputDataGrid.AllowUserToDeleteRows = false;
-            this.outputDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            this.outputDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.outputDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.outputDataGrid.Location = new System.Drawing.Point(6, 257);
             this.outputDataGrid.Name = "outputDataGrid";
-            this.outputDataGrid.RowHeadersVisible = false;
-            this.outputDataGrid.Size = new System.Drawing.Size(837, 290);
+            this.outputDataGrid.ReadOnly = true;
+            this.outputDataGrid.Size = new System.Drawing.Size(1137, 252);
             this.outputDataGrid.TabIndex = 2;
             // 
             // componentDataGrid
@@ -367,7 +361,8 @@ namespace SerialComBytes
             this.componentDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.componentDataGrid.Location = new System.Drawing.Point(7, 21);
             this.componentDataGrid.Name = "componentDataGrid";
-            this.componentDataGrid.Size = new System.Drawing.Size(837, 230);
+            this.componentDataGrid.ReadOnly = true;
+            this.componentDataGrid.Size = new System.Drawing.Size(1136, 230);
             this.componentDataGrid.TabIndex = 1;
             // 
             // openFileDialog1
@@ -381,14 +376,17 @@ namespace SerialComBytes
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1054, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1360, 24);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadComponentListToolStripMenuItem});
+            this.loadComponentListToolStripMenuItem,
+            this.saveOutputDataToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -396,25 +394,87 @@ namespace SerialComBytes
             // loadComponentListToolStripMenuItem
             // 
             this.loadComponentListToolStripMenuItem.Name = "loadComponentListToolStripMenuItem";
-            this.loadComponentListToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.loadComponentListToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl + O";
+            this.loadComponentListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.loadComponentListToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.loadComponentListToolStripMenuItem.Text = "Load Component List";
             this.loadComponentListToolStripMenuItem.Click += new System.EventHandler(this.loadComponentListToolStripMenuItem_Click);
             // 
+            // saveOutputDataToolStripMenuItem
+            // 
+            this.saveOutputDataToolStripMenuItem.Name = "saveOutputDataToolStripMenuItem";
+            this.saveOutputDataToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl + S";
+            this.saveOutputDataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveOutputDataToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.saveOutputDataToolStripMenuItem.Text = "Save as";
+            this.saveOutputDataToolStripMenuItem.Click += new System.EventHandler(this.saveOutputDataToolStripMenuItem_Click);
+            // 
             // inputButton
             // 
-            this.inputButton.Location = new System.Drawing.Point(29, 248);
+            this.inputButton.Location = new System.Drawing.Point(18, 675);
             this.inputButton.Name = "inputButton";
-            this.inputButton.Size = new System.Drawing.Size(75, 50);
+            this.inputButton.Size = new System.Drawing.Size(175, 50);
             this.inputButton.TabIndex = 20;
             this.inputButton.Text = "Start";
             this.inputButton.UseVisualStyleBackColor = true;
             this.inputButton.Click += new System.EventHandler(this.inputButton_Click);
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Increment = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Location = new System.Drawing.Point(29, 304);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            600000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(149, 20);
+            this.numericUpDown1.TabIndex = 21;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(29, 285);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(98, 13);
+            this.label5.TabIndex = 22;
+            this.label5.Text = "Timer interval (ms): ";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(185, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1054, 737);
+            this.ClientSize = new System.Drawing.Size(1360, 737);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.inputButton);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.txMsgBox);
@@ -441,6 +501,7 @@ namespace SerialComBytes
             ((System.ComponentModel.ISupportInitialize)(this.componentDataGrid)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -466,7 +527,6 @@ namespace SerialComBytes
 		private System.Windows.Forms.TextBox allMsgBox;
 		private System.Windows.Forms.GroupBox GroupBox3;
 		private System.Windows.Forms.TextBox txMsgBox;
-        private TextBox valueBox;
         private DataGridView componentDataGrid;
         private GroupBox groupBox4;
         private OpenFileDialog openFileDialog1;
@@ -475,6 +535,12 @@ namespace SerialComBytes
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem loadComponentListToolStripMenuItem;
         private Button inputButton;
+        private ToolStripMenuItem saveOutputDataToolStripMenuItem;
+        private SaveFileDialog saveFileDialog1;
+        private NumericUpDown numericUpDown1;
+        private Label label5;
+        private ToolStripSeparator toolStripMenuItem1;
+        private ToolStripMenuItem exitToolStripMenuItem;
     }
 
 }
