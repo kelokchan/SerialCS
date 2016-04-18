@@ -59,29 +59,107 @@ namespace SerialComBytes
             timerInterval = Properties.Settings.Default.TimerInterval;
             numericUpDown1.Value = timerInterval;
 
-            if (filePath != "")
+            if (!string.IsNullOrEmpty(filePath))
             {
                 loadComponentGrid(filePath);
-                componentList = getComponentNameList();
-                populateOutputColumns(componentList);
             }
             else
             {
                 Console.WriteLine("Invalid path");
             }
         }
-        private void dataRcvEvent(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+
+        private void loadComponentGrid(string path)
         {
-            //reload char break timer
-            //in timer1, when tmrChrBrk = 0 => full frame of msg has been rcv'd in buffer
-            tmrChrBrk = chrBrkConst;
-        }
-        private void Timer1_Tick(object sender, System.EventArgs e)
-        {
-            readInput();
+            string extension = Path.GetExtension(path);
+            string header = "YES";
+            string conStr, sheetName;
+
+            conStr = string.Empty;
+            switch (extension)
+            {
+
+                case ".xls": //Excel 97-03
+                    conStr = string.Format(Excel03ConString, path, header);
+                    break;
+
+                case ".xlsx": //Excel 07
+                    conStr = string.Format(Excel07ConString, path, header);
+                    break;
+            }
+
+            try
+            {
+                //Get the name of the First Sheet.
+                using (OleDbConnection con = new OleDbConnection(conStr))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand())
+                    {
+                        cmd.Connection = con;
+                        con.Open();
+                        DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                        sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                        con.Close();
+                    }
+                }
+
+                //Read Data from the First Sheet.
+                using (OleDbConnection con = new OleDbConnection(conStr))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand())
+                    {
+                        using (OleDbDataAdapter oda = new OleDbDataAdapter())
+                        {
+                            DataTable dt = new DataTable();
+                            cmd.CommandText = "SELECT * From [" + sheetName + "]";
+                            cmd.Connection = con;
+                            con.Open();
+                            oda.SelectCommand = cmd;
+                            oda.Fill(dt);
+                            con.Close();
+
+                            //Populate DataGridView.
+                            componentDataGrid.DataSource = dt;
+                        }
+                    }
+                }
+
+                componentList = getComponentNameList();
+                populateOutputColumns(componentList);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("File is corrupted or moved.");
+            }
+
         }
 
-        private void retrieveInputs()
+        private List<Component> getComponentNameList()
+        {
+            List<Component> componentList = new List<Component>();
+            foreach (DataGridViewRow row in componentDataGrid.Rows)
+            {
+                Component component = new Component();
+                component.Address = row.Cells["Reg Addr (Hex)"].ToString();
+                component.Name = row.Cells["Register"].Value.ToString();
+                component.Unit = row.Cells["Unit"].Value.ToString();
+                component.Multiplier = Double.Parse(row.Cells["Multiplier"].Value.ToString());
+                component.RegCount = int.Parse(row.Cells["Reg Byte Count"].Value.ToString());
+                componentList.Add(component);
+            }
+            return componentList;
+        }
+
+        private void populateOutputColumns(List<Component> componentList)
+        {
+            outputDataGrid.Columns.Add("Time", "Time");
+            for (int i = 0; i < componentList.Count; i++)
+            {
+                outputDataGrid.Columns.Add(componentList[i].Name, componentList[i].Name);
+            }
+        }
+
+        private void retrieveInput()
         {
             rows = new List<DataGridViewRow>();
             string startingReg = "";
@@ -115,7 +193,7 @@ namespace SerialComBytes
             Thread updateUIThread = new Thread(new ThreadStart(this.ThreadProcSafe)); //needed to change txMsgBox value after timed interval
             updateUIThread.Start();
 
-            tmrDlySnd = 1;
+            tmrDlySnd = 1; //start reading input
         }
 
         private void ThreadProcSafe()
@@ -140,8 +218,8 @@ namespace SerialComBytes
                     myComPort.Read(rcvMsgArr, 0, rcvMsgLen);
                     string s = byteArraytoStr(rcvMsgArr, rcvMsgLen);
 
-                    string raw_value = s.Remove(0, 6);
-                    raw_value = raw_value.Remove(raw_value.Length - 4, 4);
+                    string raw_value = s.Remove(0, 6); //remove first 6 digits which are not actual output
+                    raw_value = raw_value.Remove(raw_value.Length - 4, 4); //remove crc
 
                     generateOutput(raw_value, rows);
 
@@ -179,20 +257,98 @@ namespace SerialComBytes
             int byteCount = 0;
             double multiplier = 0;
             double outputValue = 0;
-
             int outputRow = outputDataGrid.Rows.Add();
+            string time = DateTime.Now.ToString();
 
             foreach (DataGridViewRow row in rows)
             {
+                outputDataGrid.Rows[outputRow].Cells["Time"].Value = time;
                 byteCount = Convert.ToInt32(row.Cells["Reg Byte Count"].Value) * 2;
                 multiplier = Convert.ToDouble(row.Cells["Multiplier"].Value);
-                outputValue = Convert.ToInt32((s.Substring(0, byteCount)), 16);
-                s = s.Remove(0, byteCount);
+                outputValue = Convert.ToInt32((s.Substring(0, byteCount)), 16); //extract value based on byte count
+                s = s.Remove(0, byteCount); //remove hex value from the string 
                 outputValue = outputValue * multiplier;
-                outputDataGrid.Rows[outputRow].Cells[row.Index].Value = outputValue;
+                outputDataGrid.Rows[outputRow].Cells[row.Index + 1].Value = outputValue; //row.Index + 1 because first column is Time
             }
 
-            outputDataGrid.FirstDisplayedScrollingRowIndex = outputDataGrid.RowCount - 1;
+            outputDataGrid.FirstDisplayedScrollingRowIndex = outputDataGrid.RowCount - 1; //point to last output row
+        }
+
+        private string addHexSpaces(string s)
+        {
+            string s1 = rmvHexSpaces(s);
+            int cindex = 0;
+
+            s = null;
+            if (!string.IsNullOrEmpty(s1))
+            {
+                foreach (char c in s1)
+                {
+                    if ((c.CompareTo('0') >= 0 && c.CompareTo('9') <= 0) || (c.CompareTo('a') >= 0 && c.CompareTo('f') <= 0) || (c.CompareTo('A') >= 0 && c.CompareTo('F') <= 0))
+                    {
+                        s = s + char.ToUpper(c);
+                        cindex = cindex + 1;
+                        if (cindex % 2 == 0)
+                        {
+                            s = s + " ";
+                        }
+                    }
+                    else
+                    {
+                        break; //break
+                    }
+                }
+            }
+            return s;
+        }
+
+        private string rmvHexSpaces(string s)
+        {
+            //remove spaces and unrecognized hex chars and join them in sequence
+            string s1 = null;
+
+            foreach (char c in s)
+            {
+                if ((c.CompareTo('0') >= 0 && c.CompareTo('9') <= 0) || (c.CompareTo('a') >= 0 && c.CompareTo('f') <= 0) || (c.CompareTo('A') >= 0 && c.CompareTo('F') <= 0))
+                {
+                    s1 = s1 + char.ToUpper(c);
+                }
+            }
+            return s1;
+        }
+
+        private void exportToExcel()
+        {
+            saveFileDialog1.InitialDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); //My Documents
+            saveFileDialog1.Title = "Save as Excel File";
+            saveFileDialog1.FileName = "Output";
+            saveFileDialog1.Filter = "Excel Files|*.xlsx|Excel Files (2003)|*.xls";
+            if (saveFileDialog1.ShowDialog() != DialogResult.Cancel)
+            {
+                Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
+                ExcelApp.Application.Workbooks.Add(Type.Missing);
+                ExcelApp.Columns.ColumnWidth = 15;
+
+
+                //Store header
+                for (int i = 1; i < outputDataGrid.Columns.Count + 1; i++)
+                {
+                    ExcelApp.Cells[1, i] = outputDataGrid.Columns[i - 1].HeaderText;
+                }
+
+                //Store values
+                for (int i = 0; i < outputDataGrid.Rows.Count; i++)
+                {
+                    for (int j = 0; j < outputDataGrid.Columns.Count; j++)
+                    {
+                        ExcelApp.Cells[i + 2, j + 1] = outputDataGrid.Rows[i].Cells[j].Value.ToString();
+                    }
+                }
+
+                ExcelApp.ActiveWorkbook.SaveCopyAs(saveFileDialog1.FileName.ToString());
+                ExcelApp.ActiveWorkbook.Saved = true;
+                ExcelApp.Quit();
+            }
         }
 
         //Private Function getModbusCRC(ByVal ba As Byte(), ByVal l As Integer) As Byte()
@@ -367,6 +523,18 @@ namespace SerialComBytes
             comStatusLabel.Text = "Not Connected";
             comStatusLabel.BackColor = Color.Red;
         }
+
+        private void dataRcvEvent(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            //reload char break timer
+            //in timer1, when tmrChrBrk = 0 => full frame of msg has been rcv'd in buffer
+            tmrChrBrk = chrBrkConst;
+        }
+        private void Timer1_Tick(object sender, System.EventArgs e)
+        {
+            readInput();
+        }
+
         private void openPortBut_Click(object sender, System.EventArgs e)
         {
             if (!(myComPort.IsOpen))
@@ -468,161 +636,6 @@ namespace SerialComBytes
             }
         }
 
-        private string addHexSpaces(string s)
-        {
-            string s1 = rmvHexSpaces(s);
-            int cindex = 0;
-
-            s = null;
-            if (!string.IsNullOrEmpty(s1))
-            {
-                foreach (char c in s1)
-                {
-                    if ((c.CompareTo('0') >= 0 && c.CompareTo('9') <= 0) || (c.CompareTo('a') >= 0 && c.CompareTo('f') <= 0) || (c.CompareTo('A') >= 0 && c.CompareTo('F') <= 0))
-                    {
-                        s = s + char.ToUpper(c);
-                        cindex = cindex + 1;
-                        if (cindex % 2 == 0)
-                        {
-                            s = s + " ";
-                        }
-                    }
-                    else
-                    {
-                        break; //break
-                    }
-                }
-            }
-            return s;
-        }
-        private string rmvHexSpaces(string s)
-        {
-            //remove spaces and unrecognized hex chars and join them in sequence
-            string s1 = null;
-
-            foreach (char c in s)
-            {
-                if ((c.CompareTo('0') >= 0 && c.CompareTo('9') <= 0) || (c.CompareTo('a') >= 0 && c.CompareTo('f') <= 0) || (c.CompareTo('A') >= 0 && c.CompareTo('F') <= 0))
-                {
-                    s1 = s1 + char.ToUpper(c);
-                }
-            }
-            return s1;
-        }
-
-        private void loadComponentGrid(string path)
-        {
-            string extension = Path.GetExtension(path);
-            string header = "YES";
-            string conStr, sheetName;
-
-            conStr = string.Empty;
-            switch (extension)
-            {
-
-                case ".xls": //Excel 97-03
-                    conStr = string.Format(Excel03ConString, path, header);
-                    break;
-
-                case ".xlsx": //Excel 07
-                    conStr = string.Format(Excel07ConString, path, header);
-                    break;
-            }
-
-            //Get the name of the First Sheet.
-            using (OleDbConnection con = new OleDbConnection(conStr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand())
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    DataTable dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                    sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                    con.Close();
-                }
-            }
-
-            //Read Data from the First Sheet.
-            using (OleDbConnection con = new OleDbConnection(conStr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand())
-                {
-                    using (OleDbDataAdapter oda = new OleDbDataAdapter())
-                    {
-                        DataTable dt = new DataTable();
-                        cmd.CommandText = "SELECT * From [" + sheetName + "]";
-                        cmd.Connection = con;
-                        con.Open();
-                        oda.SelectCommand = cmd;
-                        oda.Fill(dt);
-                        con.Close();
-
-                        //Populate DataGridView.
-                        componentDataGrid.DataSource = dt;
-                    }
-                }
-            }
-        }
-
-        private List<Component> getComponentNameList()
-        {
-            List<Component> componentList = new List<Component>();
-            foreach (DataGridViewRow row in componentDataGrid.Rows)
-            {
-                Component component = new Component();
-                component.Address = row.Cells["Reg Addr (Hex)"].ToString();
-                component.Name = row.Cells["Register"].Value.ToString();
-                component.Unit = row.Cells["Unit"].Value.ToString();
-                component.Multiplier = Double.Parse(row.Cells["Multiplier"].Value.ToString());
-                component.RegCount = int.Parse(row.Cells["Reg Byte Count"].Value.ToString());
-                componentList.Add(component);
-            }
-            return componentList;
-        }
-
-        private void populateOutputColumns(List<Component> componentList)
-        {
-            for (int i = 0; i < componentList.Count; i++)
-            {
-
-                outputDataGrid.Columns.Add(componentList[i].Name, componentList[i].Name);
-            }
-        }
-
-        private void exportToExcel()
-        {
-            saveFileDialog1.InitialDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); //My Documents
-            saveFileDialog1.Title = "Save as Excel File";
-            saveFileDialog1.FileName = "Output";
-            saveFileDialog1.Filter = "Excel Files|*.xlsx|Excel Files (2003)|*.xls";
-            if (saveFileDialog1.ShowDialog() != DialogResult.Cancel)
-            {
-                Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
-                ExcelApp.Application.Workbooks.Add(Type.Missing);
-                ExcelApp.Columns.ColumnWidth = 15;
-
-
-                //Store header
-                for (int i = 1; i < outputDataGrid.Columns.Count + 1; i++)
-                {
-                    ExcelApp.Cells[1, i] = outputDataGrid.Columns[i - 1].HeaderText;
-                }
-
-                //Store values
-                for (int i = 0; i < outputDataGrid.Rows.Count; i++)
-                {
-                    for (int j = 0; j < outputDataGrid.Columns.Count; j++)
-                    {
-                        ExcelApp.Cells[i + 2, j + 1] = outputDataGrid.Rows[i].Cells[j].Value.ToString();
-                    }
-                }
-
-                ExcelApp.ActiveWorkbook.SaveCopyAs(saveFileDialog1.FileName.ToString());
-                ExcelApp.ActiveWorkbook.Saved = true;
-                ExcelApp.Quit();
-            }
-        }
-
         private static Form1 _DefaultInstance;
         public static Form1 DefaultInstance
         {
@@ -651,7 +664,7 @@ namespace SerialComBytes
         public void TimedReadInput(object source, ElapsedEventArgs e)
         {
             // code here will run after every intervals
-            retrieveInputs();
+            retrieveInput();
         }
 
         private void inputButton_Click(object sender, EventArgs e)

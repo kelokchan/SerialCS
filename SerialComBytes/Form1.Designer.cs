@@ -72,12 +72,12 @@ namespace SerialComBytes
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadComponentListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOutputDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inputButton = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GroupBox1.SuspendLayout();
             this.GroupBox2.SuspendLayout();
             this.GroupBox3.SuspendLayout();
@@ -257,7 +257,7 @@ namespace SerialComBytes
             this.GroupBox2.Controls.Add(this.lrc_RdBut);
             this.GroupBox2.Controls.Add(this.nocrc_RdBut);
             this.GroupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBox2.Location = new System.Drawing.Point(12, 554);
+            this.GroupBox2.Location = new System.Drawing.Point(12, 539);
             this.GroupBox2.Name = "GroupBox2";
             this.GroupBox2.Size = new System.Drawing.Size(181, 100);
             this.GroupBox2.TabIndex = 13;
@@ -303,7 +303,7 @@ namespace SerialComBytes
             // 
             this.GroupBox3.Controls.Add(this.allMsgBox);
             this.GroupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBox3.Location = new System.Drawing.Point(199, 568);
+            this.GroupBox3.Location = new System.Drawing.Point(199, 539);
             this.GroupBox3.Name = "GroupBox3";
             this.GroupBox3.Size = new System.Drawing.Size(1143, 132);
             this.GroupBox3.TabIndex = 15;
@@ -312,7 +312,7 @@ namespace SerialComBytes
             // 
             // txMsgBox
             // 
-            this.txMsgBox.Location = new System.Drawing.Point(205, 706);
+            this.txMsgBox.Location = new System.Drawing.Point(199, 675);
             this.txMsgBox.Name = "txMsgBox";
             this.txMsgBox.Size = new System.Drawing.Size(1137, 20);
             this.txMsgBox.TabIndex = 16;
@@ -336,7 +336,7 @@ namespace SerialComBytes
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(199, 47);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(1149, 515);
+            this.groupBox4.Size = new System.Drawing.Size(1149, 486);
             this.groupBox4.TabIndex = 17;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Data";
@@ -350,7 +350,7 @@ namespace SerialComBytes
             this.outputDataGrid.Location = new System.Drawing.Point(6, 257);
             this.outputDataGrid.Name = "outputDataGrid";
             this.outputDataGrid.ReadOnly = true;
-            this.outputDataGrid.Size = new System.Drawing.Size(1137, 252);
+            this.outputDataGrid.Size = new System.Drawing.Size(1137, 222);
             this.outputDataGrid.TabIndex = 2;
             // 
             // componentDataGrid
@@ -376,7 +376,7 @@ namespace SerialComBytes
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1360, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1354, 24);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -405,15 +405,27 @@ namespace SerialComBytes
             this.saveOutputDataToolStripMenuItem.Name = "saveOutputDataToolStripMenuItem";
             this.saveOutputDataToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl + S";
             this.saveOutputDataToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveOutputDataToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.saveOutputDataToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.saveOutputDataToolStripMenuItem.Text = "Save as";
             this.saveOutputDataToolStripMenuItem.Click += new System.EventHandler(this.saveOutputDataToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(234, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // inputButton
             // 
-            this.inputButton.Location = new System.Drawing.Point(18, 675);
+            this.inputButton.Location = new System.Drawing.Point(12, 645);
             this.inputButton.Name = "inputButton";
-            this.inputButton.Size = new System.Drawing.Size(175, 50);
+            this.inputButton.Size = new System.Drawing.Size(181, 50);
             this.inputButton.TabIndex = 20;
             this.inputButton.Text = "Start";
             this.inputButton.UseVisualStyleBackColor = true;
@@ -456,23 +468,12 @@ namespace SerialComBytes
             this.label5.TabIndex = 22;
             this.label5.Text = "Timer interval (ms): ";
             // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(185, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1360, 737);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1354, 706);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.inputButton);
@@ -485,10 +486,9 @@ namespace SerialComBytes
             this.ForeColor = System.Drawing.SystemColors.MenuText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "test";
+            this.Text = "MobBus";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.GroupBox1.ResumeLayout(false);
             this.GroupBox1.PerformLayout();
