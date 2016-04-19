@@ -129,7 +129,7 @@ namespace SerialComBytes
             }
             catch (Exception ex)
             {
-                MessageBox.Show("File is corrupted or moved.");
+                throw;
             }
 
         }
@@ -139,11 +139,15 @@ namespace SerialComBytes
             List<Component> componentList = new List<Component>();
             foreach (DataGridViewRow row in componentDataGrid.Rows)
             {
+                Double val = 1;
                 Component component = new Component();
                 component.Address = row.Cells["Reg Addr (Hex)"].ToString();
                 component.Name = row.Cells["Register"].Value.ToString();
                 component.Unit = row.Cells["Unit"].Value.ToString();
-                component.Multiplier = Double.Parse(row.Cells["Multiplier"].Value.ToString());
+                if(Double.TryParse(row.Cells["Multiplier"].Value.ToString(), out val))
+                {
+                    component.Multiplier = val; 
+                }
                 component.RegCount = int.Parse(row.Cells["Reg Byte Count"].Value.ToString());
                 componentList.Add(component);
             }
