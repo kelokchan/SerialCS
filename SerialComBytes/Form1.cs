@@ -59,7 +59,7 @@ namespace SerialComBytes
             timerInterval = Properties.Settings.Default.TimerInterval;
             numericUpDown1.Value = timerInterval;
 
-            if (filePath != "")
+            if (filePath != "" || filePath != null)
             {
                 loadComponentGrid(filePath);
                 componentList = getComponentNameList();

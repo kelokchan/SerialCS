@@ -25,7 +25,7 @@ namespace SerialComBytes.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string ComponentFilePath {
             get {
                 return ((string)(this["ComponentFilePath"]));
